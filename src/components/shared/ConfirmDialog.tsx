@@ -13,6 +13,7 @@ import {
   AlertDialogMedia,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useRestoreFocus } from "@/hooks/useRestoreFocus";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -36,9 +37,10 @@ export function ConfirmDialog({
   loading = false,
   onConfirm,
 }: ConfirmDialogProps) {
+  const restoreFocus = useRestoreFocus();
   return (
     <AlertDialog open={open} onOpenChange={(next) => !loading && onOpenChange(next)}>
-      <AlertDialogContent size="sm">
+      <AlertDialogContent size="sm" {...restoreFocus}>
         <AlertDialogHeader>
           {destructive && (
             <AlertDialogMedia className="bg-destructive/10 text-destructive">

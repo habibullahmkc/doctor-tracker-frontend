@@ -19,6 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useAddPatientToDoctor, useDoctorOptions } from "@/hooks/useDoctors";
 import { useCreatePatient, useUpdatePatient } from "@/hooks/usePatients";
+import { useRestoreFocus } from "@/hooks/useRestoreFocus";
 import { CONDITIONS, GENDERS, PATIENT_STATUSES } from "@/lib/constants";
 import { applyServerErrors } from "@/lib/formErrors";
 import { toYMD } from "@/lib/format";
@@ -35,9 +36,10 @@ interface PatientFormDialogProps {
 }
 
 export function PatientFormDialog({ open, onOpenChange, patient, doctor }: PatientFormDialogProps) {
+  const restoreFocus = useRestoreFocus();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[92vh] overflow-y-auto sm:max-w-xl">
+      <DialogContent className="max-h-[92vh] overflow-y-auto sm:max-w-xl" {...restoreFocus}>
         <DialogHeader>
           <DialogTitle>{patient ? "Edit patient" : doctor ? `Add patient to ${doctor.name}` : "Add a patient"}</DialogTitle>
           <DialogDescription>
@@ -155,7 +157,7 @@ function PatientForm({
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
       <div className="grid gap-4 sm:grid-cols-[1fr_7rem]">
         <FormField id="patient-name" label="Full name" required error={errors.name?.message}>
-          <Input {...fieldA11y("patient-name", errors.name?.message)} placeholder="Fatema Akter" autoFocus {...register("name")} />
+          <Input {...fieldA11y("patient-name", errors.name?.message)} placeholder="Fatema Akter" {...register("name")} />
         </FormField>
         <FormField id="patient-age" label="Age" required error={errors.age?.message}>
           <Input {...fieldA11y("patient-age", errors.age?.message)} type="number" inputMode="numeric" min={0} max={120} {...register("age")} />

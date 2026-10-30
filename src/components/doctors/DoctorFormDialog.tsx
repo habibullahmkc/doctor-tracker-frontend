@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCreateDoctor, useDoctorFilterOptions, useUpdateDoctor } from "@/hooks/useDoctors";
+import { useRestoreFocus } from "@/hooks/useRestoreFocus";
 import { SPECIALIZATIONS } from "@/lib/constants";
 import { applyServerErrors } from "@/lib/formErrors";
 import type { Doctor } from "@/types/doctor";
@@ -29,9 +30,10 @@ interface DoctorFormDialogProps {
 }
 
 export function DoctorFormDialog({ open, onOpenChange, doctor }: DoctorFormDialogProps) {
+  const restoreFocus = useRestoreFocus();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg" {...restoreFocus}>
         <DialogHeader>
           <DialogTitle>{doctor ? "Edit doctor" : "Add a doctor"}</DialogTitle>
           <DialogDescription>
@@ -82,7 +84,7 @@ function DoctorForm({ doctor, onDone }: { doctor?: Doctor; onDone: () => void })
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
       <FormField id="doctor-name" label="Full name" required error={errors.name?.message}>
-        <Input {...fieldA11y("doctor-name", errors.name?.message)} placeholder="Dr. Sarah Ahmed" autoFocus {...register("name")} />
+        <Input {...fieldA11y("doctor-name", errors.name?.message)} placeholder="Dr. Sarah Ahmed" {...register("name")} />
       </FormField>
 
       <div className="grid gap-4 sm:grid-cols-2">
