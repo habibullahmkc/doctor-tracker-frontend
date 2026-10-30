@@ -2,24 +2,28 @@ import { Badge } from "@/components/ui/badge";
 import type { Condition, PatientStatus } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
-const STATUS_STYLES: Record<PatientStatus, string> = {
-  Admitted: "bg-blue-50 text-blue-700 ring-blue-600/20",
-  "Under Treatment": "bg-amber-50 text-amber-700 ring-amber-600/20",
-  Recovered: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
-  Discharged: "bg-slate-100 text-slate-600 ring-slate-500/20",
+/**
+ * Status hues validated with the dataviz palette checker (CVD ΔE ≥ 9, normal-vision ΔE ≥ 27).
+ * Charts use the hex values; badges use matching tints. Status is never color-alone — always labelled.
+ */
+export const STATUS_COLORS: Record<PatientStatus, string> = {
+  Admitted: "#2a78d6",
+  "Under Treatment": "#eb6834",
+  Recovered: "#1baf7a",
+  Discharged: "#6250d6",
 };
 
-const STATUS_DOT: Record<PatientStatus, string> = {
-  Admitted: "bg-blue-500",
-  "Under Treatment": "bg-amber-500",
-  Recovered: "bg-emerald-500",
-  Discharged: "bg-slate-400",
+const STATUS_BADGE: Record<PatientStatus, string> = {
+  Admitted: "bg-blue-50 text-blue-700 ring-blue-600/20",
+  "Under Treatment": "bg-orange-50 text-orange-700 ring-orange-600/20",
+  Recovered: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
+  Discharged: "bg-violet-50 text-violet-700 ring-violet-600/20",
 };
 
 export function StatusBadge({ status, className }: { status: PatientStatus; className?: string }) {
   return (
-    <Badge variant="outline" className={cn("gap-1.5 border-0 ring-1 ring-inset", STATUS_STYLES[status], className)}>
-      <span className={cn("size-1.5 rounded-full", STATUS_DOT[status])} aria-hidden />
+    <Badge variant="outline" className={cn("gap-1.5 border-0 ring-1 ring-inset", STATUS_BADGE[status], className)}>
+      <span className="size-1.5 rounded-full" style={{ backgroundColor: STATUS_COLORS[status] }} aria-hidden />
       {status}
     </Badge>
   );
