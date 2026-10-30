@@ -2,6 +2,9 @@
 
 **A secure admin portal for managing doctors, their patients and the trends behind them.**
 
+[![CI](https://github.com/habibullahmkc/doctor-tracker-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/habibullahmkc/doctor-tracker-frontend/actions/workflows/ci.yml)
+[![API CI](https://github.com/habibullahmkc/doctor-tracker-backend/actions/workflows/ci.yml/badge.svg)](https://github.com/habibullahmkc/doctor-tracker-backend/actions/workflows/ci.yml)
+
 | | |
 | --- | --- |
 | **Live app** | https://doctor-tracker-psi.vercel.app |
@@ -100,8 +103,14 @@ Then open http://localhost:1982 and sign in with `admin@doctortracker.com` / `Ad
 | --- | --- |
 | `npm run dev`: dev server on :1982 | `npm run dev`: API with hot reload |
 | `npm run build` / `npm start`: production build | `npm run build` / `npm start`: compile and run |
-| `npm run lint`: ESLint | `npm run seed`: reset demo data |
-| | `npm run typecheck`: TypeScript check |
+| `npm run lint`: ESLint | `npm run lint`: Biome lint + format check |
+| `npm run typecheck`: route types + TypeScript | `npm run typecheck`: TypeScript |
+| `npm test`: Vitest unit tests | `npm test`: unit tests (`node:test`) |
+| `npm run e2e:ui`: browser end-to-end (needs Chrome) | `npm run test:e2e`: API end-to-end (needs a running API) |
+| `npm run e2e:a11y`: axe accessibility + keyboard | `npm run seed`: reset demo data |
+
+Both repos run lint, typecheck, unit tests and a production build on every push (GitHub Actions). The end-to-end
+suites take `BASE_URL`, so they run against a local stack or the live deployment, and they clean up after themselves.
 
 ---
 
@@ -159,10 +168,11 @@ src/
 │   ├── shared/                  # DataTable, Pagination, filters, dialogs, form fields, states
 │   └── dashboard | doctors | patients/
 ├── hooks/                       # data hooks (TanStack Query), debounce, focus restore
-├── lib/                         # api client, query keys, URL-state parsers, formatting
+├── lib/                         # api client, server prefetch, query keys, URL-state parsers, pure helpers (+ unit tests)
 ├── services/                    # typed API calls per resource
 ├── validations/                 # Zod form schemas (mirror the API rules)
 └── proxy.ts                     # route protection (Next.js 16 "proxy", formerly middleware)
+e2e/                             # browser end-to-end + accessibility suites (puppeteer, axe-core)
 ```
 
 The backend follows a module-per-feature layout (`modules/{auth,doctors,patients,dashboard}` with
@@ -225,13 +235,23 @@ patients condition + sort        IXSCAN condition_1_admissionDate_-1    docsExam
 patients of one doctor + sort    IXSCAN doctor_1_admissionDate_-1       docsExamined 7   returned 7
 ```
 
-**Scaling further.** Past a few hundred thousand rows I would switch deep pagination from `skip` to a cursor on
-`(admissionDate, _id)`, move fuzzy search to Atlas Search, and cache or pre-aggregate the dashboard.
+- **Cached analytics with exact invalidation.** Dashboard results are cached for 60 seconds. Concurrent requests
+  share one in-flight computation, and every doctor or patient write clears the cache, so the numbers are never stale.
+  Unfiltered list totals use `estimatedDocumentCount()`, which reads collection metadata, and responses are gzipped.
 
-### Also worth noting: server state vs UI state
-There is no Redux. Almost all state here is *server* state, which TanStack Query already caches, deduplicates,
-refetches and invalidates. Filters, sort and page live in the URL through nuqs, and dialogs keep local state. A global
-store would only duplicate data that already has a better owner.
+**Scaling further.** Past a few hundred thousand rows I would switch deep pagination from `skip` to a cursor on
+`(admissionDate, _id)`, move fuzzy search to Atlas Search, and move the cache to Redis once there is more than one
+API instance.
+
+### Also worth noting: data fetching and state
+- **Server prefetch, client cache.** The dashboard page and the app shell prefetch their data on the server (the
+  visitor's cookie is forwarded) and hand it to TanStack Query through `HydrationBoundary`. The first paint already
+  has numbers, and the client keeps caching and refetching as usual. If the API is asleep, the prefetch gives up after
+  3 seconds and the browser fetches instead, so a cold backend never blocks the page.
+- **Same region.** Vercel functions run in Singapore (`sin1`), next to the API, so server-side fetches stay short.
+- **No Redux.** Almost all state is *server* state, which TanStack Query already caches, deduplicates, refetches and
+  invalidates. Filters, sort and page live in the URL (nuqs), and dialogs keep local state. A global store would only
+  duplicate data that already has a better owner.
 
 ---
 
@@ -239,15 +259,16 @@ store would only duplicate data that already has a better owner.
 
 | Check | Result |
 | --- | --- |
-| API end-to-end suite (70 checks: auth, CRUD, search, filters, pagination, validation, cascade delete, dashboard) | ✅ 70 / 70 against the live deployment |
-| Browser end-to-end (35 checks: real Chrome, desktop + mobile, create/edit/delete flows) | ✅ 35 / 35 live, no console errors |
-| Accessibility, axe-core, WCAG 2.1 AA, 12 pages and dialog states | ✅ 0 violations |
+| Unit tests: backend 31 (`node:test`), frontend 14 (Vitest) | ✅ all pass, run in CI on every push |
+| API end-to-end (70 checks: auth, CRUD, search, filters, pagination, validation, cascade delete, dashboard) | ✅ 70 / 70 against the live deployment |
+| Browser end-to-end (35 checks: real Chrome, desktop + mobile, create/edit/delete flows) | ✅ 35 / 35 live, no console or hydration errors |
+| Accessibility: axe-core, WCAG 2.1 AA, 12 pages and dialog states | ✅ 0 violations |
 | Keyboard: skip link, focus ring, focus trap, Esc returns focus, menus and selects | ✅ 10 / 10 |
 | Lighthouse: Accessibility / Best Practices / SEO | ✅ 100 / 100 / 100 on every page |
-| Lighthouse: Performance | Desktop 88–96 · Mobile 75–87 |
+| Lighthouse: Performance (live) | Desktop: login 99, dashboard 99, patients 99 · Mobile: login 91, dashboard 75–78 |
 
 Chart colors follow a validated palette: the patient-status colors pass color-vision-deficiency checks, and every
-color comes with a text label.
+color comes with a text label. The admissions chart can also be switched to a table view.
 
 ---
 
@@ -280,5 +301,5 @@ color comes with a text label.
 ## Future Improvements
 - Role-based access (admin vs read-only staff) and refresh-token rotation
 - Cursor-based pagination and Atlas Search for very large datasets
-- Server-rendered first page of each list to cut JavaScript on mobile
-- Automated test suite in CI (the end-to-end checks above currently run as scripts)
+- Run the end-to-end suites in CI against a disposable MongoDB replica set
+- Server-render the first page of the doctor and patient lists, as the dashboard already does
