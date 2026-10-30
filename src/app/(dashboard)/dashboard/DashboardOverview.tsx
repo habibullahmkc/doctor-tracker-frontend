@@ -1,9 +1,9 @@
 "use client";
 
 import { Activity, ArrowRight, CalendarPlus, Stethoscope, Users } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
-import { AdmissionsChart } from "@/components/dashboard/AdmissionsChart";
 import { ChartCard } from "@/components/dashboard/ChartCard";
 import { RangeToggle } from "@/components/dashboard/RangeToggle";
 import { RankedBars } from "@/components/dashboard/RankedBars";
@@ -12,8 +12,15 @@ import { StatusBreakdown } from "@/components/dashboard/StatusBreakdown";
 import { StatCard } from "@/components/shared/StatCard";
 import { ErrorState } from "@/components/shared/States";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useDashboardStats } from "@/hooks/useDashboard";
 import { formatNumber } from "@/lib/format";
+
+// Recharts is the heaviest dependency; load it in its own chunk so the rest of the dashboard renders first.
+const AdmissionsChart = dynamic(() => import("@/components/dashboard/AdmissionsChart").then((m) => m.AdmissionsChart), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[280px] w-full rounded-lg" />,
+});
 
 const RANGE_LABEL = { "7d": "last 7 days", "30d": "last 30 days", "12m": "last 12 months" } as const;
 const rangeParser = parseAsStringLiteral(["7d", "30d", "12m"] as const).withDefault("30d");
