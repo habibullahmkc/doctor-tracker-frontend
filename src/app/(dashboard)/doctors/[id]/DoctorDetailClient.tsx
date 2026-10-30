@@ -4,7 +4,7 @@ import { ArrowLeft, Plus, SearchX, Users } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useQueryStates } from "nuqs";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { DoctorFormDialog } from "@/components/doctors/DoctorFormDialog";
 import { DoctorProfileCard, DoctorProfileSkeleton } from "@/components/doctors/DoctorProfileCard";
 import { countPatientFilters, PatientFilters } from "@/components/patients/PatientFilters";
@@ -20,6 +20,7 @@ import { useDeleteDoctor, useDoctor, useDoctorPatients } from "@/hooks/useDoctor
 import { usePageClamp } from "@/hooks/usePageClamp";
 import { useDeletePatient } from "@/hooks/usePatients";
 import { ApiError } from "@/lib/api";
+import { APP_NAME } from "@/lib/constants";
 import { listStateOptions, patientListParsers } from "@/lib/searchParams";
 import type { Patient, PatientListParams } from "@/types/patient";
 
@@ -47,6 +48,11 @@ export function DoctorDetailClient({ id }: { id: string }) {
 
   const doctorQuery = useDoctor(id);
   const doctor = doctorQuery.data;
+
+  // Tab title with the doctor's name once loaded.
+  useEffect(() => {
+    if (doctor) document.title = `${doctor.name} · ${APP_NAME}`;
+  }, [doctor]);
 
   const params = useMemo<PatientListParams>(
     () => ({
