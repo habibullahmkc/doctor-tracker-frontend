@@ -8,7 +8,7 @@
     "start": "next start -p 1982",
     "lint": "eslint",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "e2e:ui": "node e2e/ui.e2e.mjs",
     "e2e:a11y": "node e2e/a11y.e2e.mjs"
   },
