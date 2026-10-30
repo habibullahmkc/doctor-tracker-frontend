@@ -13,7 +13,7 @@ export function initials(name: string) {
   const words = name
     .replace(/^dr\.?\s+/i, "")
     .split(/\s+/)
-    .filter(Boolean);
+    .filter((word) => /^\p{L}/u.test(word)); // skip numbers / symbols
   return ((words[0]?.[0] ?? "") + (words.length > 1 ? words[words.length - 1][0] : "")).toUpperCase();
 }
 
