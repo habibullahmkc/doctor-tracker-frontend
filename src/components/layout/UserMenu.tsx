@@ -31,9 +31,9 @@ export function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-10 gap-2 px-1.5 sm:pr-2.5" aria-label="Account menu">
+        <Button variant="ghost" className="h-10 gap-2 px-1.5 sm:pr-2.5" data-testid="account-menu">
           <Avatar className="size-8">
-            <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
+            <AvatarFallback className="bg-accent text-xs font-semibold text-accent-foreground">
               {initials(admin?.name ?? "Admin")}
             </AvatarFallback>
           </Avatar>
@@ -42,6 +42,7 @@ export function UserMenu() {
             <span className="block text-xs leading-tight text-muted-foreground">Administrator</span>
           </span>
           <ChevronDown className="hidden size-4 text-muted-foreground sm:block" />
+          <span className="sr-only">Open account menu</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">

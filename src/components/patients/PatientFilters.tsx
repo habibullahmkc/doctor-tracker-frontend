@@ -31,18 +31,21 @@ export function PatientFilters({ values, onChange, showDoctor = true }: PatientF
     <>
       <FilterSelect
         allLabel="All conditions"
+        ariaLabel="Condition"
         value={values.condition}
         options={CONDITIONS}
         onChange={(condition) => onChange({ condition, page: 1 })}
       />
       <FilterSelect
         allLabel="All statuses"
+        ariaLabel="Status"
         value={values.status}
         options={PATIENT_STATUSES}
         onChange={(status) => onChange({ status, page: 1 })}
       />
       <FilterSelect
         allLabel="All genders"
+        ariaLabel="Gender"
         value={values.gender}
         options={GENDERS}
         onChange={(gender) => onChange({ gender, page: 1 })}
@@ -51,6 +54,7 @@ export function PatientFilters({ values, onChange, showDoctor = true }: PatientF
       {showDoctor && (
         <FilterSelect
           allLabel="All doctors"
+          ariaLabel="Doctor"
           value={values.doctor}
           options={doctors?.map((d) => ({ value: d._id, label: d.name })) ?? []}
           onChange={(doctor) => onChange({ doctor, page: 1 })}

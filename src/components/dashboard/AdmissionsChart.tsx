@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, type TooltipContentProps } from "recharts";
 import type { DashboardStats, StatsRange } from "@/types/dashboard";
 
-const SERIES = "#0d9488"; // teal-600, 3.7:1 on white
+const SERIES = "#00786f"; // teal-700 (matches --primary), 5.4:1 on white
 
 interface Point {
   key: string;

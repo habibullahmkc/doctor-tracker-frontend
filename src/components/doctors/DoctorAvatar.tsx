@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 export function DoctorAvatar({ name, className }: { name: string; className?: string }) {
   return (
     <Avatar className={cn("size-9", className)}>
-      <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">{initials(name)}</AvatarFallback>
+      <AvatarFallback className="bg-accent text-xs font-semibold text-accent-foreground">{initials(name)}</AvatarFallback>
     </Avatar>
   );
 }

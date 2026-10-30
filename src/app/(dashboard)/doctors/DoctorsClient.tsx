@@ -143,12 +143,14 @@ export function DoctorsClient() {
       >
         <FilterSelect
           allLabel="All specializations"
+          ariaLabel="Specialization"
           value={q.specialization}
           options={filterOptions?.specializations ?? SPECIALIZATIONS}
           onChange={(specialization) => setQ({ specialization, page: 1 })}
         />
         <FilterSelect
           allLabel="All hospitals"
+          ariaLabel="Hospital"
           value={q.hospital}
           options={filterOptions?.hospitals ?? []}
           onChange={(hospital) => setQ({ hospital, page: 1 })}

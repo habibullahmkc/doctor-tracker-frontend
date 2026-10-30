@@ -12,7 +12,7 @@ export function RecentPatients({ patients }: { patients: DashboardStats["recentP
       {patients.map((patient) => (
         <li key={patient._id} className="flex items-center gap-3 py-3">
           <Avatar className="size-9">
-            <AvatarFallback className="bg-muted text-xs font-medium">{initials(patient.name)}</AvatarFallback>
+            <AvatarFallback className="bg-muted text-xs font-medium text-slate-600">{initials(patient.name)}</AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium">{patient.name}</p>

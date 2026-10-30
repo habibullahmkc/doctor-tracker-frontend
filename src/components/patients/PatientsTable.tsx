@@ -46,7 +46,7 @@ export function PatientsTable({
         cell: (p) => (
           <div className="flex items-center gap-3">
             <Avatar className="size-9">
-              <AvatarFallback className="bg-muted text-xs font-medium">{initials(p.name)}</AvatarFallback>
+              <AvatarFallback className="bg-muted text-xs font-medium text-slate-600">{initials(p.name)}</AvatarFallback>
             </Avatar>
             <div className="min-w-0">
               <p className="truncate font-medium">{p.name}</p>
@@ -125,7 +125,7 @@ export function PatientsTable({
       renderMobileCard={(p) => (
         <div className="flex items-start gap-3 px-4 py-3">
           <Avatar className="mt-0.5 size-9">
-            <AvatarFallback className="bg-muted text-xs font-medium">{initials(p.name)}</AvatarFallback>
+            <AvatarFallback className="bg-muted text-xs font-medium text-slate-600">{initials(p.name)}</AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1 space-y-1.5">
             <div>

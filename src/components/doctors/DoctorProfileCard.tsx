@@ -35,7 +35,7 @@ export function DoctorProfileCard({ doctor, onEdit, onDelete }: DoctorProfileCar
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="min-w-0 space-y-1.5">
                 <h1 className="text-2xl font-semibold tracking-tight">{doctor.name}</h1>
-                <Badge className="bg-primary/10 text-primary hover:bg-primary/10">{doctor.specialization}</Badge>
+                <Badge className="bg-accent text-accent-foreground hover:bg-accent">{doctor.specialization}</Badge>
               </div>
               <div className="flex shrink-0 gap-2">
                 <Button variant="outline" size="sm" onClick={onEdit}>

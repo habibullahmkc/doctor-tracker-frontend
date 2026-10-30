@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
@@ -32,6 +33,10 @@ export function FilterSelect({
   ariaLabel,
   disabled,
 }: FilterSelectProps) {
+  const id = useId();
+  const labelId = `${id}-label`;
+  const valueId = `${id}-value`;
+
   return (
     <Select
       value={value || (required ? undefined : ALL)}
@@ -39,10 +44,17 @@ export function FilterSelect({
       disabled={disabled}
     >
       <SelectTrigger
-        aria-label={ariaLabel ?? allLabel}
+        data-filter={allLabel}
+        // role=combobox doesn't take its name from content, so point at the context + the visible value.
+        aria-labelledby={ariaLabel ? `${labelId} ${valueId}` : valueId}
         className={cn("h-9 w-full bg-card sm:w-auto sm:min-w-40", value && !required && "border-primary/40 text-foreground", className)}
       >
-        <SelectValue placeholder={allLabel} />
+        {ariaLabel && (
+          <span id={labelId} className="sr-only">
+            {ariaLabel}:
+          </span>
+        )}
+        <SelectValue id={valueId} placeholder={allLabel} />
       </SelectTrigger>
       <SelectContent position="popper" align="start">
         {!required && <SelectItem value={ALL}>{allLabel}</SelectItem>}
