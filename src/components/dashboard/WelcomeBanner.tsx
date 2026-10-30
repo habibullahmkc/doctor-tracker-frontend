@@ -1,7 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
-import { CalendarDays, HeartPulse, Plus, Stethoscope } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import { useMe } from "@/hooks/useAuth";
 
 /** Decorative illustration drawn in SVG — no image download, crisp at any size. */
@@ -69,32 +69,21 @@ export function WelcomeBanner() {
   const today = format(new Date(), "EEE, d MMM yyyy");
 
   return (
-    <section className="relative overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 via-white to-blue-100/70 p-5 shadow-xs sm:p-7">
-      <div className="pointer-events-none absolute -top-16 -left-10 size-56 rounded-full bg-blue-200/30 blur-3xl" aria-hidden />
-      <div className="relative z-10 max-w-xl space-y-3">
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-white/80 px-2.5 py-1 text-xs font-medium text-blue-800">
-          <CalendarDays className="size-3.5" />
-          {today}
-        </span>
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+    <section className="relative overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 via-white to-blue-100/70 px-5 py-[22px] shadow-xs sm:px-6">
+      <div className="pointer-events-none absolute -top-16 -left-10 size-40 rounded-full bg-blue-200/30 blur-3xl" aria-hidden />
+      <div className="relative z-10 max-w-2xl space-y-0.5">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <h1 className="text-xl font-bold tracking-tight">
             Welcome back, {admin?.name ?? "Admin"} <span aria-hidden>👋</span>
           </h1>
-          <p className="text-sm text-slate-600 sm:text-base">Here&apos;s what&apos;s happening with your healthcare system today.</p>
-        </div>
-        <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1 text-xs text-slate-600">
-          <span className="inline-flex items-center gap-1.5">
-            <Stethoscope className="size-3.5 text-blue-700" /> Doctors &amp; specialties
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <HeartPulse className="size-3.5 text-blue-700" /> Live admissions
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <Plus className="size-3.5 text-blue-700" /> Patient care status
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-white/80 px-2 py-0.5 text-xs font-medium text-blue-800">
+            <CalendarDays className="size-3.5" />
+            {today}
           </span>
         </div>
+        <p className="text-sm text-slate-600">Here&apos;s what&apos;s happening with your healthcare system today.</p>
       </div>
-      <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[46%] max-w-md md:block">
+      <div className="pointer-events-none absolute inset-y-0 right-2 hidden w-64 md:block">
         <Illustration />
       </div>
     </section>
