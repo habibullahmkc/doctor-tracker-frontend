@@ -20,10 +20,10 @@ Built with **Next.js 16 (App Router), TypeScript, Tailwind CSS v4, shadcn/ui and
 
 ## Setup Guide
 
-Requires Node.js 20+ and the [backend API](https://github.com/<username>/doctor-tracker-backend) running.
+Requires Node.js 20+ and the [backend API](https://github.com/habibullahmkc/doctor-tracker-backend) running.
 
 ```bash
-git clone https://github.com/<username>/doctor-tracker-frontend.git
+git clone https://github.com/habibullahmkc/doctor-tracker-frontend.git
 cd doctor-tracker-frontend
 npm install
 cp .env.example .env.local   # set BACKEND_URL and JWT_SECRET
