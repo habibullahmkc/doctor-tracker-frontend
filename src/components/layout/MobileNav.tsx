@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Logo } from "./Logo";
 import { LogoutButton } from "./LogoutButton";
+import { SidebarCard } from "./Sidebar";
 import { NavLinks } from "./NavLinks";
 
 export function MobileNav() {
@@ -19,16 +20,19 @@ export function MobileNav() {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="flex w-72 flex-col gap-0 p-0">
-        <SheetHeader className="h-16 justify-center border-b px-5">
+        <SheetHeader className="h-20 justify-center border-b px-5">
           <SheetTitle asChild>
             <div>
-              <Logo />
+              <Logo tagline />
             </div>
           </SheetTitle>
           <SheetDescription className="sr-only">Main navigation</SheetDescription>
         </SheetHeader>
-        <div className="flex-1 px-3 py-5">
+        <div className="flex flex-1 flex-col gap-6 px-3 py-5">
           <NavLinks onNavigate={() => setOpen(false)} />
+          <div className="mt-auto px-1">
+            <SidebarCard />
+          </div>
         </div>
         <div className="border-t p-3">
           <LogoutButton />

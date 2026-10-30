@@ -23,6 +23,15 @@ export interface DashboardStats {
   byCondition: NameValue<Condition>[];
   byStatus: NameValue<PatientStatus>[];
   bySpecialization: NameValue<Specialization>[];
+  /** Last 8 months, oldest first. Running totals are at the end of each month. */
+  trends: {
+    month: string;
+    newDoctors: number;
+    newPatients: number;
+    doctors: number;
+    patients: number;
+    avgPerDoctor: number;
+  }[];
   recentPatients: {
     _id: string;
     name: string;

@@ -1,3 +1,4 @@
+import { HeartPulse } from "lucide-react";
 import { STATUS_COLORS } from "@/components/patients/PatientBadges";
 import { PATIENT_STATUSES, type PatientStatus } from "@/lib/constants";
 import { formatNumber } from "@/lib/format";
@@ -10,14 +11,15 @@ export function StatusBreakdown({ data }: { data: NameValue<PatientStatus>[] }) 
   const total = rows.reduce((sum, row) => sum + row.value, 0);
 
   return (
-    <div className="space-y-5">
-      <div>
-        <p className="text-3xl font-semibold tracking-tight tabular-nums">{formatNumber(total)}</p>
+    <div className="relative space-y-5">
+      <HeartPulse className="pointer-events-none absolute -top-2 right-0 size-24 text-blue-100" aria-hidden />
+      <div className="relative">
+        <p className="text-4xl font-bold tracking-tight tabular-nums">{formatNumber(total)}</p>
         <p className="text-xs text-muted-foreground">patients in total</p>
       </div>
 
       {/* 2px surface gap between segments; rounded outer ends */}
-      <div className="flex h-3 w-full gap-0.5 overflow-hidden rounded-full" role="img" aria-label="Patients by status">
+      <div className="relative flex h-3 w-full gap-0.5 overflow-hidden rounded-full" role="img" aria-label="Patients by status">
         {rows
           .filter((row) => row.value > 0)
           .map((row) => (

@@ -24,7 +24,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   return (
     <main className="grid min-h-screen lg:grid-cols-2">
       {/* Brand panel */}
-      <section className="relative hidden overflow-hidden bg-gradient-to-br from-teal-600 via-teal-700 to-cyan-900 p-10 text-white lg:flex lg:flex-col lg:justify-between">
+      <section className="relative hidden overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-900 p-10 text-white lg:flex lg:flex-col lg:justify-between">
         <div className="pointer-events-none absolute -top-24 -right-24 size-96 rounded-full bg-white/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-32 -left-16 size-96 rounded-full bg-cyan-300/10 blur-3xl" />
 
@@ -37,13 +37,13 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
               <br />
               Insights, instantly.
             </h1>
-            <p className="max-w-md text-teal-50/80">
+            <p className="max-w-md text-blue-50/80">
               A focused admin workspace for tracking doctors, their patients and the trends that matter.
             </p>
           </div>
           <ul className="space-y-4">
             {FEATURES.map(({ icon: Icon, text }) => (
-              <li key={text} className="flex items-center gap-3 text-sm text-teal-50/90">
+              <li key={text} className="flex items-center gap-3 text-sm text-blue-50/90">
                 <span className="flex size-8 items-center justify-center rounded-lg bg-white/10 ring-1 ring-white/20">
                   <Icon className="size-4" />
                 </span>
@@ -53,7 +53,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
           </ul>
         </div>
 
-        <p className="relative flex items-center gap-2 text-xs text-teal-50/60">
+        <p className="relative flex items-center gap-2 text-xs text-blue-50/60">
           <Activity className="size-3.5" /> Doctor Tracker Admin Portal
         </p>
       </section>

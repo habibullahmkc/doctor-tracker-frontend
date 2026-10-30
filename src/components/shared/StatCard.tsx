@@ -10,7 +10,7 @@ interface StatCardProps {
   icon: LucideIcon;
   hint?: ReactNode;
   loading?: boolean;
-  /** Tailwind classes for the icon badge, e.g. "bg-teal-50 text-teal-600". */
+  /** Tailwind classes for the icon badge, e.g. "bg-blue-50 text-blue-600". */
   tone?: string;
   className?: string;
 }
