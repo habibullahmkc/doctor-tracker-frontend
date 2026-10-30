@@ -27,7 +27,7 @@ git clone https://github.com/habibullahmkc/doctor-tracker-frontend.git
 cd doctor-tracker-frontend
 npm install
 cp .env.example .env.local   # set BACKEND_URL and JWT_SECRET
-npm run dev                  # http://localhost:3000
+npm run dev                  # http://localhost:1982
 ```
 
 ### Environment Variables
