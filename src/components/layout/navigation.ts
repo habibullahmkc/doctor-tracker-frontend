@@ -16,11 +16,3 @@ export const NAV_ITEMS: NavItem[] = [
 export const isActivePath = (pathname: string, href: string) =>
   pathname === href || pathname.startsWith(`${href}/`);
 
-/** Breadcrumb trail for the topbar, e.g. /doctors/123 → Doctors › Details */
-export function getBreadcrumbs(pathname: string) {
-  const item = NAV_ITEMS.find((nav) => isActivePath(pathname, nav.href));
-  if (!item) return [];
-  const crumbs = [{ label: item.label, href: item.href }];
-  if (pathname !== item.href) crumbs.push({ label: "Details", href: pathname });
-  return crumbs;
-}

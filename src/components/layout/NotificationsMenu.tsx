@@ -37,7 +37,7 @@ export function NotificationsMenu() {
         >
           <Bell className="size-5" />
           {fresh > 0 && (
-            <span className="absolute top-1 right-1 flex size-4 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white ring-2 ring-background">
+            <span className="absolute -top-0.5 -right-0.5 flex size-[18px] items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white ring-2 ring-background">
               {fresh}
             </span>
           )}
