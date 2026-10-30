@@ -3,6 +3,8 @@
 Admin portal for managing doctors, their patients and healthcare analytics.
 Built with **Next.js 16 (App Router), TypeScript, Tailwind CSS v4, shadcn/ui and TanStack Query**.
 
+**Live:** https://doctor-tracker-psi.vercel.app · **API:** https://doctor-tracker-api-evvz.onrender.com/api/health
+
 > 🚧 Work in progress — full documentation (architecture, technical decisions, screenshots) will be added here.
 
 ## Tech Stack
