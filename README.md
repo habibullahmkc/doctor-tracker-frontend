@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Doctor Tracker — Frontend
 
-## Getting Started
+Admin portal for managing doctors, their patients and healthcare analytics.
+Built with **Next.js 16 (App Router), TypeScript, Tailwind CSS v4, shadcn/ui and TanStack Query**.
 
-First, run the development server:
+> 🚧 Work in progress — full documentation (architecture, technical decisions, screenshots) will be added here.
+
+## Tech Stack
+
+| Concern         | Choice                                      |
+| --------------- | ------------------------------------------- |
+| Framework       | Next.js 16 (App Router, Turbopack)          |
+| Language        | TypeScript                                  |
+| Styling / UI    | Tailwind CSS v4, shadcn/ui (Radix)          |
+| Server state    | TanStack Query                              |
+| URL state       | nuqs                                        |
+| Forms           | React Hook Form + Zod                       |
+| Charts          | Recharts                                    |
+| Route guarding  | `src/proxy.ts` + `jose` (JWT verification)  |
+
+## Setup Guide
+
+Requires Node.js 20+ and the [backend API](https://github.com/<username>/doctor-tracker-backend) running.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/<username>/doctor-tracker-frontend.git
+cd doctor-tracker-frontend
+npm install
+cp .env.example .env.local   # set BACKEND_URL and JWT_SECRET
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Variable      | Description                                                              |
+| ------------- | ------------------------------------------------------------------------ |
+| `BACKEND_URL` | Base URL of the Express API. `/api/*` is proxied here (no trailing slash) |
+| `JWT_SECRET`  | Same value as the backend; lets `proxy.ts` verify the session cookie     |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## How requests flow
 
-## Learn More
+```
+Browser ──▶ Next.js (Vercel) ── proxy.ts: verify JWT cookie, redirect to /login if missing
+                │
+                └─ /api/* ──rewrite──▶ Express API (Render) ──▶ MongoDB Atlas
+```
 
-To learn more about Next.js, take a look at the following resources:
+The browser only ever talks to the Next.js origin, so the HttpOnly auth cookie is first-party
+and is never blocked by third-party cookie restrictions.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+├── app/
+│   ├── (auth)/login/        # public sign-in page
+│   └── (dashboard)/         # protected pages: dashboard, doctors, patients
+├── components/
+│   ├── ui/                  # shadcn/ui primitives
+│   ├── layout/              # sidebar, topbar, logo
+│   ├── shared/              # reusable building blocks (tables, filters, dialogs)
+│   └── dashboard|doctors|patients/
+├── hooks/                   # custom React hooks
+├── lib/                     # api client, constants, utils
+├── services/                # typed API calls per resource
+├── types/                   # shared TypeScript types
+├── validations/             # Zod schemas for forms
+└── proxy.ts                 # route protection (Next.js 16 "proxy", formerly middleware)
+```
