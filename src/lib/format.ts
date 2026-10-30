@@ -19,5 +19,16 @@ export function initials(name: string) {
 
 export const formatNumber = (value: number) => new Intl.NumberFormat("en-US").format(value);
 
+const dhakaLongDate = new Intl.DateTimeFormat("en-GB", {
+  weekday: "short",
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  timeZone: "Asia/Dhaka",
+});
+
+/** "Sat 31 Oct 2026" in Bangladesh time — identical on the server and in the browser. */
+export const formatToday = (date = new Date()) => dhakaLongDate.format(date);
+
 /** Local "YYYY-MM-DD" (used for date inputs and API date filters). */
 export const toYMD = (date: Date) => format(date, "yyyy-MM-dd");

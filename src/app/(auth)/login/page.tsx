@@ -2,6 +2,7 @@ import { Activity, BarChart3, HeartPulse, ShieldCheck, Users, type LucideIcon } 
 import type { Metadata } from "next";
 import { BrandMark, BrandWordmark } from "@/components/layout/BrandMark";
 import { ServerStatus } from "@/components/shared/ServerStatus";
+import { safeRedirect } from "@/lib/redirect";
 import { cn } from "@/lib/utils";
 import { LoginForm } from "./LoginForm";
 import { LoginIllustration } from "./LoginIllustration";
@@ -13,12 +14,6 @@ const FEATURES: { icon: LucideIcon; title: string; text: string; tone: string }[
   { icon: BarChart3, title: "Live analytics on admissions and workload", text: "Make better decisions with real-time data", tone: "bg-blue-50 text-blue-700" },
   { icon: ShieldCheck, title: "Secure, cookie-based authentication", text: "Your data, our priority", tone: "bg-violet-50 text-violet-700" },
 ];
-
-/** Only allow same-site relative redirects (blocks open redirects like //evil.com). */
-function safeRedirect(next: string | string[] | undefined) {
-  const value = Array.isArray(next) ? next[0] : next;
-  return value && value.startsWith("/") && !value.startsWith("//") ? value : "/dashboard";
-}
 
 function MedicalCross({ className }: { className?: string }) {
   return (

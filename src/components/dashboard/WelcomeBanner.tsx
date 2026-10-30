@@ -1,8 +1,8 @@
 "use client";
 
-import { format } from "date-fns";
 import { CalendarDays } from "lucide-react";
 import { useMe } from "@/hooks/useAuth";
+import { formatToday } from "@/lib/format";
 
 /** Decorative illustration drawn in SVG — no image download, crisp at any size. */
 function Illustration() {
@@ -66,7 +66,7 @@ function Illustration() {
 
 export function WelcomeBanner() {
   const { data: admin } = useMe();
-  const today = format(new Date(), "EEE, d MMM yyyy");
+  const today = formatToday();
 
   return (
     <section className="relative overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 via-white to-blue-100/70 px-5 py-[22px] shadow-xs sm:px-6">
@@ -78,7 +78,7 @@ export function WelcomeBanner() {
           </h1>
           <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-white/80 px-2 py-0.5 text-xs font-medium text-blue-800">
             <CalendarDays className="size-3.5" />
-            {today}
+            <span suppressHydrationWarning>{today}</span>
           </span>
         </div>
         <p className="text-sm text-slate-600">Here&apos;s what&apos;s happening with your healthcare system today.</p>

@@ -6,7 +6,11 @@
     "dev": "next dev -p 1982",
     "build": "next build",
     "start": "next start -p 1982",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "e2e:ui": "node e2e/ui.e2e.mjs",
+    "e2e:a11y": "node e2e/a11y.e2e.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^6.0.2",
@@ -32,12 +36,15 @@
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
-    "@types/node": "^20",
+    "@types/node": "^22.20.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "axe-core": "^4.14.0",
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
+    "puppeteer-core": "^25.16.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^5.0.5"
   }
 }

@@ -23,7 +23,10 @@ export function RecentPatients({ patients }: { patients: DashboardStats["recentP
               </Link>
             </p>
           </div>
-          <span className="hidden shrink-0 text-xs text-muted-foreground sm:inline">• {formatRelative(patient.admissionDate)}</span>
+          {/* relative time can differ by a few seconds between server render and hydration */}
+          <span suppressHydrationWarning className="hidden shrink-0 text-xs text-muted-foreground sm:inline">
+            • {formatRelative(patient.admissionDate)}
+          </span>
           <StatusBadge status={patient.status} className="shrink-0" />
         </li>
       ))}

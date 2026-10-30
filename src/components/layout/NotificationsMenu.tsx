@@ -13,15 +13,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useDashboardStats } from "@/hooks/useDashboard";
+import { usePatients } from "@/hooks/usePatients";
 import { formatRelative } from "@/lib/format";
 
 const DAY = 24 * 60 * 60 * 1000;
+const RECENT = { limit: 5, sort: "newest" } as const;
 
-/** Recent admissions as notifications; the badge counts admissions in the last 24 hours. */
+/**
+ * Latest admissions as notifications; the badge counts those in the last 24 hours.
+ * Uses its own small query (5 newest patients) so the shell never depends on, or
+ * blocks, a page's data.
+ */
 export function NotificationsMenu() {
-  const { data } = useDashboardStats("30d"); // shares the dashboard's default cache entry
-  const recent = useMemo(() => data?.recentPatients ?? [], [data]);
+  const { data } = usePatients(RECENT);
+  const recent = useMemo(() => data?.data ?? [], [data]);
   // eslint-disable-next-line react-hooks/purity -- relative "last 24h" window is evaluated per render on purpose
   const now = Date.now();
   const fresh = recent.filter((p) => now - new Date(p.admissionDate).getTime() < DAY).length;
@@ -37,7 +42,9 @@ export function NotificationsMenu() {
         >
           <Bell className="size-5" />
           {fresh > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 flex size-[18px] items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white ring-2 ring-background">
+            <span
+              suppressHydrationWarning
+              className="absolute -top-0.5 -right-0.5 flex size-[18px] items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white ring-2 ring-background">
               {fresh}
             </span>
           )}

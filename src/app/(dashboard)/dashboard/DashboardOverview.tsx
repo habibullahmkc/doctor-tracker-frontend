@@ -5,7 +5,9 @@ import {
   ArrowRight,
   CalendarPlus,
   ChartColumn,
+  ChartSpline,
   ClipboardList,
+  Table2,
   HeartPulse,
   Stethoscope,
   UserRound,
@@ -14,6 +16,8 @@ import {
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
+import { useState } from "react";
+import { AdmissionsTable } from "@/components/dashboard/AdmissionsTable";
 import { ChartCard } from "@/components/dashboard/ChartCard";
 import { ConditionList } from "@/components/dashboard/ConditionList";
 import { DoctorRankList } from "@/components/dashboard/DoctorRankList";
@@ -28,6 +32,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDashboardStats } from "@/hooks/useDashboard";
 import { formatNumber } from "@/lib/format";
+import { percentChange } from "@/lib/stats";
 import type { DashboardStats } from "@/types/dashboard";
 
 // Recharts is the heaviest dependency; load it in its own chunk so the rest of the dashboard renders first.
@@ -38,17 +43,6 @@ const AdmissionsChart = dynamic(() => import("@/components/dashboard/AdmissionsC
 
 const RANGE_LABEL = { "7d": "last 7 days", "30d": "last 30 days", "12m": "last 12 months" } as const;
 const rangeParser = parseAsStringLiteral(["7d", "30d", "12m"] as const).withDefault("30d");
-
-/** Month-over-month change of a series, as card copy. */
-function percentChange(current: number, previous: number) {
-  if (!previous) return { text: "New this month", direction: "flat" as const };
-  const pct = ((current - previous) / previous) * 100;
-  const rounded = Math.abs(pct) < 10 ? pct.toFixed(1) : Math.round(pct).toString();
-  return {
-    text: `${pct >= 0 ? "" : "−"}${rounded.replace("-", "")}% vs last month`,
-    direction: pct > 0 ? ("up" as const) : pct < 0 ? ("down" as const) : ("flat" as const),
-  };
-}
 
 function useCardData(data: DashboardStats | undefined) {
   const trends = data?.trends ?? [];
@@ -68,6 +62,7 @@ function useCardData(data: DashboardStats | undefined) {
 
 export function DashboardOverview() {
   const [range, setRange] = useQueryState("range", rangeParser.withOptions({ history: "replace", scroll: false }));
+  const [asTable, setAsTable] = useState(false);
   const { data, isLoading, isFetching, error, refetch } = useDashboardStats(range);
   const cards = useCardData(data);
 
@@ -144,11 +139,30 @@ export function DashboardOverview() {
           description={
             loading ? "Loading…" : `${formatNumber(admissionsInRange)} admissions in the ${RANGE_LABEL[data?.range ?? range]}`
           }
-          action={<RangeToggle value={range} onChange={setRange} />}
+          action={
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon-sm"
+                className="rounded-full"
+                aria-pressed={asTable}
+                aria-label={asTable ? "Show admissions as a chart" : "Show admissions as a table"}
+                onClick={() => setAsTable((v) => !v)}
+              >
+                {asTable ? <ChartSpline /> : <Table2 />}
+              </Button>
+              <RangeToggle value={range} onChange={setRange} />
+            </div>
+          }
           loading={loading}
         >
           <div className={isFetching ? "opacity-60 transition-opacity" : "transition-opacity"}>
-            {data && <AdmissionsChart data={data.admissions} range={data.range} />}
+            {data &&
+              (asTable ? (
+                <AdmissionsTable data={data.admissions} range={data.range} />
+              ) : (
+                <AdmissionsChart data={data.admissions} range={data.range} />
+              ))}
           </div>
         </ChartCard>
 
