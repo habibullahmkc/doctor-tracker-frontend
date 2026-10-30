@@ -1,15 +1,17 @@
-import { Activity, BarChart3, ShieldCheck, Users } from "lucide-react";
+import { Activity, BarChart3, HeartPulse, ShieldCheck, Users, type LucideIcon } from "lucide-react";
 import type { Metadata } from "next";
-import { Logo } from "@/components/layout/Logo";
+import { BrandMark, BrandWordmark } from "@/components/layout/BrandMark";
 import { ServerStatus } from "@/components/shared/ServerStatus";
+import { cn } from "@/lib/utils";
 import { LoginForm } from "./LoginForm";
+import { LoginIllustration } from "./LoginIllustration";
 
 export const metadata: Metadata = { title: "Sign in" };
 
-const FEATURES = [
-  { icon: Users, text: "Manage doctors and their patients in one place" },
-  { icon: BarChart3, text: "Live analytics on admissions and workload" },
-  { icon: ShieldCheck, text: "Secure, cookie-based authentication" },
+const FEATURES: { icon: LucideIcon; title: string; text: string; tone: string }[] = [
+  { icon: Users, title: "Manage doctors and their patients", text: "Keep everything in one place", tone: "bg-teal-50 text-teal-700" },
+  { icon: BarChart3, title: "Live analytics on admissions and workload", text: "Make better decisions with real-time data", tone: "bg-blue-50 text-blue-700" },
+  { icon: ShieldCheck, title: "Secure, cookie-based authentication", text: "Your data, our priority", tone: "bg-violet-50 text-violet-700" },
 ];
 
 /** Only allow same-site relative redirects (blocks open redirects like //evil.com). */
@@ -18,69 +20,120 @@ function safeRedirect(next: string | string[] | undefined) {
   return value && value.startsWith("/") && !value.startsWith("//") ? value : "/dashboard";
 }
 
+function MedicalCross({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={cn("pointer-events-none absolute", className)} aria-hidden>
+      <path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7z" fill="currentColor" />
+    </svg>
+  );
+}
+
 export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const { next } = await searchParams;
 
   return (
-    <main className="grid min-h-screen lg:grid-cols-2">
-      {/* Brand panel */}
-      <section className="relative hidden overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-900 p-10 text-white lg:flex lg:flex-col lg:justify-between">
-        <div className="pointer-events-none absolute -top-24 -right-24 size-96 rounded-full bg-white/10 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-32 -left-16 size-96 rounded-full bg-cyan-300/10 blur-3xl" />
+    <main className="grid min-h-screen bg-[#f6f9fe] lg:grid-cols-[1.12fr_1fr]">
+      {/* ---------- Brand panel ---------- */}
+      <section className="relative hidden overflow-hidden bg-gradient-to-br from-white via-[#f3f8ff] to-[#e8f1fd] lg:block">
+        <div className="absolute inset-y-0 right-0 w-[58%]">
+          <LoginIllustration />
+          {/* fade the illustration into the copy */}
+          <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-[#f3f8ff] to-transparent" />
+        </div>
+        <MedicalCross className="top-32 left-[68%] size-12 text-blue-200/70" />
+        <MedicalCross className="top-20 left-[76%] size-5 text-blue-200" />
 
-        <Logo inverted />
-
-        <div className="relative space-y-8">
-          <div className="space-y-3">
-            <h1 className="text-4xl leading-tight font-semibold tracking-tight">
-              Care, organised.
-              <br />
-              Insights, instantly.
-            </h1>
-            <p className="max-w-md text-blue-50/80">
-              A focused admin workspace for tracking doctors, their patients and the trends that matter.
+        <div className="relative z-10 flex h-full flex-col justify-between p-10 xl:p-14">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <BrandMark className="size-14" />
+              <BrandWordmark className="text-4xl" />
+            </div>
+            <p className="pl-[68px] text-sm text-slate-600">
+              Better Doctors <span className="px-1.5 text-slate-300">|</span> Better Care{" "}
+              <span className="px-1.5 text-slate-300">|</span> Healthier Tomorrow
             </p>
           </div>
-          <ul className="space-y-4">
-            {FEATURES.map(({ icon: Icon, text }) => (
-              <li key={text} className="flex items-center gap-3 text-sm text-blue-50/90">
-                <span className="flex size-8 items-center justify-center rounded-lg bg-white/10 ring-1 ring-white/20">
-                  <Icon className="size-4" />
-                </span>
-                {text}
-              </li>
-            ))}
-          </ul>
-        </div>
 
-        <p className="relative flex items-center gap-2 text-xs text-blue-50/60">
-          <Activity className="size-3.5" /> Doctor Tracker Admin Portal
-        </p>
+          <div className="max-w-md space-y-8">
+            <div className="space-y-4">
+              <h1 className="text-5xl leading-[1.08] font-bold tracking-tight">
+                <span className="text-[#0f2a5f]">Care, organised.</span>
+                <br />
+                <span className="bg-gradient-to-r from-teal-700 to-emerald-600 bg-clip-text text-transparent">
+                  Insights, instantly.
+                </span>
+              </h1>
+              <p className="text-lg leading-relaxed text-slate-600">
+                A focused admin workspace for tracking doctors, their patients and the trends that matter.
+              </p>
+            </div>
+            <ul className="space-y-5">
+              {FEATURES.map(({ icon: Icon, title, text, tone }) => (
+                <li key={title} className="flex items-center gap-4">
+                  <span className={cn("flex size-12 shrink-0 items-center justify-center rounded-2xl shadow-xs", tone)}>
+                    <Icon className="size-6" />
+                  </span>
+                  <span>
+                    <span className="block text-[15px] font-semibold text-slate-800">{title}</span>
+                    <span className="block text-sm text-slate-600">{text}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <p className="flex items-center gap-2 text-sm text-slate-600">
+            <Activity className="size-4 text-blue-700" /> Doctor Tracker Admin Portal
+          </p>
+        </div>
       </section>
 
-      {/* Form panel */}
-      <section className="flex items-center justify-center p-6 sm:p-10">
-        <div className="w-full max-w-sm space-y-8">
-          <Logo className="lg:hidden" />
+      {/* ---------- Sign-in panel ---------- */}
+      <section className="relative flex flex-col overflow-hidden px-5 py-6 sm:px-10">
+        <MedicalCross className="top-40 -right-6 hidden size-24 text-blue-100 sm:block" />
+        <svg viewBox="0 0 120 40" className="pointer-events-none absolute right-8 bottom-10 w-28 text-teal-300" aria-hidden>
+          <path d="M0 24 H40 L48 8 L58 36 L66 16 L72 24 H120" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
 
-          <div className="space-y-1.5">
-            <h2 className="text-2xl font-semibold tracking-tight">Welcome back</h2>
-            <p className="text-sm text-muted-foreground">Sign in to your admin account to continue.</p>
+        <p className="hidden items-center justify-end gap-2 text-sm text-slate-600 sm:flex">
+          <HeartPulse className="size-5 text-blue-700" />
+          Healthcare <span aria-hidden>•</span> Data <span aria-hidden>•</span> People
+        </p>
+
+        <div className="flex flex-1 items-center justify-center py-8">
+          <div className="relative w-full max-w-[460px] rounded-3xl border border-white bg-white/90 p-7 shadow-[0_20px_60px_-20px_rgba(15,42,95,0.18)] backdrop-blur sm:p-10">
+            <div className="flex items-center gap-2.5">
+              <BrandMark className="size-11" />
+              <BrandWordmark className="text-2xl" />
+            </div>
+
+            <div className="mt-6 mb-7 space-y-1.5">
+              <h2 className="text-3xl font-bold tracking-tight text-[#0f2a5f]">Welcome back</h2>
+              <p className="text-[15px] text-slate-600">Sign in to your admin account to continue.</p>
+            </div>
+
+            <LoginForm redirectTo={safeRedirect(next)} />
+
+            <div className="mt-7 border-t border-dashed border-slate-200 pt-5">
+              <div className="flex items-start gap-3 rounded-2xl bg-slate-50 p-4">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white text-blue-700 shadow-xs">
+                  <ShieldCheck className="size-5" />
+                </span>
+                <div className="text-sm text-slate-600">
+                  <p className="font-semibold text-slate-800">Demo credentials</p>
+                  <p>
+                    Email: <span className="font-medium text-slate-800">admin@doctortracker.com</span>
+                  </p>
+                  <p>
+                    Password: <span className="font-medium text-slate-800">Admin@123</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <ServerStatus className="mt-5" />
           </div>
-
-          <LoginForm redirectTo={safeRedirect(next)} />
-
-          <div className="rounded-lg border border-dashed bg-card p-3 text-xs text-muted-foreground">
-            <p className="mb-1 font-medium text-foreground">Demo credentials</p>
-            <p>
-              Email: <span className="font-mono text-foreground">admin@doctortracker.com</span>
-            </p>
-            <p>
-              Password: <span className="font-mono text-foreground">Admin@123</span>
-            </p>
-          </div>
-
-          <ServerStatus />
         </div>
       </section>
     </main>

@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, Loader2, LogIn } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, LogIn, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -46,18 +46,21 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
-        <Input
-          id="email"
-          type="email"
-          autoComplete="email"
-          autoFocus
-          placeholder="admin@doctortracker.com"
-          className="h-10"
-          aria-invalid={!!errors.email}
-          aria-describedby={errors.email ? "email-error" : undefined}
-          {...register("email")}
-        />
+        <Label htmlFor="email" className="font-semibold text-slate-800">Email</Label>
+        <div className="relative">
+          <Mail className="pointer-events-none absolute top-1/2 left-3.5 size-[18px] -translate-y-1/2 text-slate-500" aria-hidden />
+          <Input
+            id="email"
+            type="email"
+            autoComplete="email"
+            autoFocus
+            placeholder="admin@doctortracker.com"
+            className="h-12 rounded-xl bg-white pl-11 text-[15px] shadow-xs"
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? "email-error" : undefined}
+            {...register("email")}
+          />
+        </div>
         {errors.email && (
           <p id="email-error" className="text-xs text-destructive">
             {errors.email.message}
@@ -66,14 +69,15 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
+        <Label htmlFor="password" className="font-semibold text-slate-800">Password</Label>
         <div className="relative">
+          <Lock className="pointer-events-none absolute top-1/2 left-3.5 size-[18px] -translate-y-1/2 text-slate-500" aria-hidden />
           <Input
             id="password"
             type={showPassword ? "text" : "password"}
             autoComplete="current-password"
-            placeholder="••••••••"
-            className="h-10 pr-10"
+            placeholder="Your password"
+            className="h-12 rounded-xl bg-white pr-11 pl-11 text-[15px] shadow-xs"
             aria-invalid={!!errors.password}
             aria-describedby={errors.password ? "password-error" : undefined}
             {...register("password")}
@@ -81,7 +85,7 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
           <button
             type="button"
             onClick={() => setShowPassword((v) => !v)}
-            className="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-muted-foreground hover:text-foreground"
+            className="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-r-xl text-slate-500 hover:text-foreground"
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -94,7 +98,12 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
         )}
       </div>
 
-      <Button type="submit" size="lg" className="h-10 w-full" disabled={isSubmitting}>
+      <Button
+        type="submit"
+        size="lg"
+        className="h-12 w-full rounded-xl bg-gradient-to-r from-blue-700 to-blue-600 text-[15px] font-semibold shadow-md shadow-blue-600/20 hover:from-blue-800 hover:to-blue-700"
+        disabled={isSubmitting}
+      >
         {isSubmitting ? <Loader2 className="animate-spin" /> : <LogIn />}
         {isSubmitting ? "Signing in…" : "Sign in"}
       </Button>
